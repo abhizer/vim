@@ -16,6 +16,17 @@ Plugin 'tpope/vim-surround'
 Plugin 'tomnomnom/xoria256.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'tpope/vim-fugitive'
+Plugin 'godlygeek/tabular'
+Plugin 'mattn/emmet-vim'
+Plugin 'tpope/vim-commentary'
+Plugin 'tmhedberg/matchit'
+Plugin 'alvan/vim-closetag'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'yggdroot/indentline'
+Plugin 'ervandew/supertab'
+Plugin 'jwalton512/vim-blade'
+
 
 call vundle#end()		" required
 filetype plugin indent on	" required
