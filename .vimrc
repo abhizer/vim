@@ -16,6 +16,7 @@ colorscheme gruvbox
 set t_CO=256									"Use 256 colors. Useful for Terminal Vim.
 
 set guifont=fira_code:h17							"Set the default font family and size.
+set background=dark
 "set macligatures								"We want pretty symbols, when available.
 set linespace=0								"Mac-vim specific line-height.
 
@@ -26,8 +27,25 @@ set guioptions-=R
 
 set guioptions-=e								"We don't want GUI tabs
 
+set tabstop=8
+set expandtab
+set softtabstop=4
+set shiftwidth=4
+
+
+
+set autowriteall                                                                "Automatically write the file when switching buffers."
+set complete=.,w,b,u                                                            "Set our desired autocomplete matching."
+
+
+
+
+filetype indent on
+set smartindent
+
+
 " Line wrapping
-set nowrap
+set wrap
 set linebreak
 set showbreak=▹
 
@@ -65,6 +83,21 @@ nmap <Leader>1 :NERDTreeToggle<cr>
 nmap <Leader>f :tag<space>
 
 
+" Laravel specific mappings
+nmap <Leader>lr :e routes/web.php<cr>
+nmap <Leader>lm :!php artisan make:
+nmap <Leader>lfc :e app/Http/Controllers/<cr>
+nmap <Leader>lfm :e app/<cr>
+nmap <Leader>lfv :e resources/views/<cr>
+
+
+
+" emmet expand
+let g:user_emmet_leader_key='\'
+let g:user_emmet_mode='a'                                                       "enable all function in all mode.
+
+
+
 
 
 "-----------Split Management-----------"
@@ -98,15 +131,29 @@ let g:grep_cmd_opts = '--line-numbers --no-heading'
 
 
 
+" closetags
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml, *.php, *.blade.php'
+
 
 
 " NERDTree
 
 let NERDTreeHijackNetrw = 0
 
+
+"-----------Scrolling-----------"
+
+
+
+
+
+
+
+
 "-----------Auto-Commands-----------"
 augroup autosourcing
 	autocmd!
 	autocmd BufWritePost .vimrc source %
+        autocmd BufRead,BufWritePre *.blade.php normal gg=G
 augroup END
 
