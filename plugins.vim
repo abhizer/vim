@@ -26,9 +26,20 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'yggdroot/indentline'
 Plugin 'ervandew/supertab'
 Plugin 'jwalton512/vim-blade'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'nvie/vim-flake8'
+Plugin 'chr4/nginx.vim'
+Plugin 'fatih/vim-go'
+Plugin 'rust-lang/rust.vim'
+Plugin 'cespare/vim-toml'
+Plugin 'hashivim/vim-terraform'
+Plugin 'dense-analysis/ale'
+Plugin 'mhinz/vim-startify'
+
+
+Plugin 'ryanoasis/vim-devicons'
+
 
 
 call vundle#end()		" required
 filetype plugin indent on	" required
-
-
