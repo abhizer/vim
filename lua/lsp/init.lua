@@ -213,32 +213,10 @@ ensure_installed = { "rust", "php", "go", "c", "cpp", "lua" }, -- one of "all", 
     additional_vim_regex_highlighting = false,
   },
 }
-
--- LSP Remaps
--- Code navigation shortcuts
--- nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
--- nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
--- nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
--- nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
--- nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
--- nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
--- nnoremap <silent> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
--- nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
--- nnoremap <silent> <space>D <cmd>lua vim.lsp.buf.type_definition()<CR>
--- nnoremap <silent> <space>rn <cmd>lua vim.lsp.buf.rename()<CR>
--- nnoremap <silent> <space>a <cmd>lua vim.lsp.buf.code_action()<CR>
--- nnoremap <silent> <space>q <cmd>lua vim.lsp.diagnostic.set_loclist()<CR>
--- nnoremap <silent> <space>f <cmd>lua vim.lsp.buf.formatting()<CR>
--- nnoremap <silent> <space>e <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR> 
-
 -- Set updatetime for CursorHold
 -- 300ms of no cursor movement to trigger CursorHold
 -- set updatetime=150
 vim.opt.updatetime = 150
-
--- Goto previous/next diagnostic warning/error
--- nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
--- nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 
 -- TreeSitter based code folding
 
