@@ -39,6 +39,9 @@ return require('packer').startup(function(use)
     -- Better Matching with %
     use 'andymass/vim-matchup'
 
+    -- Auto Pairs
+    use 'jiangmiao/auto-pairs'
+
     -- Change Directory to the Project Root
     use 'airblade/vim-rooter'
 

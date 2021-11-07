@@ -60,7 +60,7 @@ vim.opt.colorcolumn = '100'
 vim.opt.hidden = true
 
 -- Rust
-vim.g['rust_fmt_autosave'] = 1
+vim.g['rustfmt_autosave'] = 1
 
 -- Automatically write the file when switching buffers
 -- vim.opt.autowriteall = true
