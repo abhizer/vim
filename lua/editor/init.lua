@@ -38,7 +38,8 @@ HOME = os.getenv("HOME")
 vim.opt.undodir = HOME .. '/.vim/undodir'
 
 vim.opt.undofile = true
-vim.opt.scrolloff = 7
+-- vim.opt.scrolloff = 7
+vim.cmd('set scrolloff=7')
 
 -- Completion Option
 vim.opt.completeopt='menuone,noinsert,noselect'

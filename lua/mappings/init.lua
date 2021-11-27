@@ -6,7 +6,7 @@ local opts = { noremap = true, silent = true }
 map('n', '<leader>ev', ':e $MYVIMRC<cr>', opts)
 
 --NERDTree
-map('n', '<leader>1', ':NERDTreeToggle<cr>', opts)
+map('n', '<leader>1', ':NvimTreeToggle<cr>', opts)
 
 -- Copy to clipboard
 map('n', '<leader>y', '"*y', opts)

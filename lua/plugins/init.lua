@@ -14,15 +14,11 @@ return require('packer').startup(function(use)
     use 'airblade/vim-gitgutter'
 
     -- NERDTree
-    use 'scrooloose/nerdtree'
+    -- use 'scrooloose/nerdtree'
 
     -- Base 16 Colorscheme
     use 'chriskempson/base16-vim'
     use 'morhetz/gruvbox'
-
-    -- Airline
-    use 'vim-airline/vim-airline'
-    use 'vim-airline/vim-airline-themes'
 
     -- Vim Surround
     use 'tpope/vim-surround'
@@ -71,7 +67,14 @@ return require('packer').startup(function(use)
     use 'hashivim/vim-terraform'
 
     -- Fancy Start Page
-    use 'mhinz/vim-startify'
+    -- use 'mhinz/vim-startify'
+    use {
+    'goolord/alpha-nvim',
+    requires = { 'kyazdani42/nvim-web-devicons' },
+    config = function ()
+        require'alpha'.setup(require'alpha.themes.startify'.opts)
+    end
+}
 
     -- Nvim-LSP
     use 'neovim/nvim-lspconfig'
@@ -107,7 +110,26 @@ return require('packer').startup(function(use)
     }
 
     -- Devicons
-    use 'ryanoasis/vim-devicons'
+    -- use 'ryanoasis/vim-devicons'
+    use 'kyazdani42/nvim-web-devicons'
+
+    use {
+        'kyazdani42/nvim-tree.lua',
+        config = function() require'nvim-tree'.setup {} end
+    }
+
+    -- Airline
+    -- use 'vim-airline/vim-airline'
+    -- use 'vim-airline/vim-airline-themes'
+    use {
+      'nvim-lualine/lualine.nvim',
+      requires = 'kyazdani42/nvim-web-devicons'
+      }
+
+    use 'akinsho/bufferline.nvim'
+
+    use 'mattn/emmet-vim'
+
 
 end)
 

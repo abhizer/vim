@@ -18,7 +18,7 @@ for type, icon in pairs(signs) do
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
-local servers = {"ccls"}
+local servers = {"ccls", "pylsp", "tsserver"}
 for _, lsp in ipairs(servers) do
     nvim_lsp[lsp].setup {
         on_attach = on_attach,
@@ -201,7 +201,7 @@ cmp.setup({
 
 -- TreeSitter based syntax highlighting
 require'nvim-treesitter.configs'.setup {
-ensure_installed = { "rust", "php", "go", "c", "cpp", "lua" }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+ensure_installed = { "rust", "php", "go", "c", "cpp", "lua", "python", "javascript"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
 --  ignore_install = { "javascript" }, -- List of parsers to ignore installing
   highlight = {
     enable = true,              -- false will disable the whole extension
