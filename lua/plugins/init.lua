@@ -1,7 +1,7 @@
 local fn = vim.fn
 local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
 return require('packer').startup(function(use)
@@ -10,15 +10,10 @@ return require('packer').startup(function(use)
     -- Vinegar
     use 'tpope/vim-vinegar'
 
-    -- Git Gutter
-    use 'airblade/vim-gitgutter'
-
-    -- NERDTree
-    -- use 'scrooloose/nerdtree'
-
-    -- Base 16 Colorscheme
-    use 'chriskempson/base16-vim'
-    use 'morhetz/gruvbox'
+    -- Colorschemes
+    -- use 'chriskempson/base16-vim'
+    -- use 'morhetz/gruvbox'
+    use 'sainnhe/gruvbox-material'
 
     -- Vim Surround
     use 'tpope/vim-surround'
@@ -66,16 +61,6 @@ return require('packer').startup(function(use)
     -- Terraform
     use 'hashivim/vim-terraform'
 
-    -- Fancy Start Page
-    -- use 'mhinz/vim-startify'
-    use {
-    'goolord/alpha-nvim',
-    requires = { 'kyazdani42/nvim-web-devicons' },
-    config = function ()
-        require'alpha'.setup(require'alpha.themes.startify'.opts)
-    end
-}
-
     -- Nvim-LSP
     use 'neovim/nvim-lspconfig'
 
@@ -97,10 +82,18 @@ return require('packer').startup(function(use)
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
 
-    -- Github Copilot
-    -- use 'github/copilot.vim'
+    -- Git Gutter
+    use {
+        'lewis6991/gitsigns.nvim',
+        config = function()
+            require('gitsigns').setup{
+                numhl = true, 
+                current_line_blame = true, 
+            }
+        end
+    }
 
-    -- Debugging Rust
+    -- Debugger 
     use 'mfussenegger/nvim-dap'
 
     -- TreeSitter
@@ -110,26 +103,35 @@ return require('packer').startup(function(use)
     }
 
     -- Devicons
-    -- use 'ryanoasis/vim-devicons'
     use 'kyazdani42/nvim-web-devicons'
 
+    -- Lspkind
+    use 'onsails/lspkind-nvim'
+
+    -- Fancy Start Page
     use {
-        'kyazdani42/nvim-tree.lua',
-        config = function() require'nvim-tree'.setup {} end
+        'goolord/alpha-nvim',
+        config = function ()
+            require'alpha'.setup(require'alpha.themes.startify'.opts)
+        end
     }
 
-    -- Airline
-    -- use 'vim-airline/vim-airline'
-    -- use 'vim-airline/vim-airline-themes'
+    -- NvimTree
     use {
-      'nvim-lualine/lualine.nvim',
-      requires = 'kyazdani42/nvim-web-devicons'
-      }
+        'kyazdani42/nvim-tree.lua',
+        config = function() require'nvim-tree'.setup{} end
+    }
 
+    -- Lualine
+    use {
+        'nvim-lualine/lualine.nvim',
+    }
+
+    -- Bufferline
     use 'akinsho/bufferline.nvim'
 
+    -- Emmet
     use 'mattn/emmet-vim'
-
 
 end)
 

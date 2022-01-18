@@ -11,9 +11,11 @@ vim.cmd([[
 ]])
 
 vim.opt.termguicolors = true
-vim.opt.background = 'dark'
-vim.g['gruvbox_contrast_dark'] = 'hard'
-vim.cmd('colorscheme gruvbox')
+-- vim.opt.background = 'dark'
+-- vim.g['gruvbox_contrast_dark'] = 'hard'
+-- vim.cmd('colorscheme gruvbox')
+vim.g['gruvbox_material_background'] = 'hard'
+vim.cmd('colorscheme gruvbox-material')
 vim.opt.syntax = 'on'
 vim.opt.swapfile = false
 
@@ -82,10 +84,10 @@ vim.opt.linebreak = true
 vim.opt.showbreak= '▹'
 
 -- Airline 
-vim.g['airline_powerline_fonts'] = 1
-vim.g['airline#extensions#tabline#enabled'] =1 
+-- vim.g['airline_powerline_fonts'] = 1
+-- vim.g['airline#extensions#tabline#enabled'] =1 
 -- vim.g['airline_theme'] ='base16_gruvbox_dark_hard'
-vim.g['airline_theme']='zenburn'
+-- vim.g['airline_theme']='zenburn'
 
 -- Search
 vim.opt.hlsearch = true

@@ -167,6 +167,7 @@ require('rust-tools').setup(opts)
 -- Setup Completion
 -- See https://github.com/hrsh7th/nvim-cmp#basic-configuration
 local cmp = require'cmp'
+local lspkind = require ('lspkind')
 cmp.setup({
   -- Enable LSP snippets
   snippet = {
@@ -197,7 +198,30 @@ cmp.setup({
     { name = 'path' },
     { name = 'buffer' },
   },
+
+  formatting = {
+      format = lspkind.cmp_format({with_text = false, maxwidth = 50})
+  },
 })
+
+-- vim.cmd([[
+--     " gray
+--     highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#FABD2F
+--     " blue
+--     highlight! CmpItemAbbrMatch guibg=NONE guifg=#045858
+--     highlight! CmpItemAbbrMatchFuzzy guibg=NONE guifg=#045858
+--     " light blue
+--     highlight! CmpItemKindVariable guibg=NONE guifg=#83A598
+--     highlight! CmpItemKindInterface guibg=NONE guifg=#83A598
+--     highlight! CmpItemKindText guibg=NONE guifg=#83A598
+--     " red
+--     highlight! CmpItemKindFunction guibg=NONE guifg=#CC241D
+--     highlight! CmpItemKindMethod guibg=NONE guifg=#CC241D
+--     " front
+--     highlight! CmpItemKindKeyword guibg=NONE guifg=#D65D0E
+--     highlight! CmpItemKindProperty guibg=NONE guifg=#D65D0E
+--     highlight! CmpItemKindUnit guibg=NONE guifg=#D65D0E
+-- ]])
 
 -- TreeSitter based syntax highlighting
 require'nvim-treesitter.configs'.setup {
