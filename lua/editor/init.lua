@@ -1,11 +1,15 @@
 -- Editor 
+vim.g['gruvbox_material_background'] = 'hard'
+vim.cmd('colorscheme gruvbox-material')
+
 vim.cmd([[
     if !has("gui_running")
         set t_Co=256
     endif
 
     let &t_ut=''
-    hi Normal ctermbg=NONE
+    hi Normal guibg=NONE
+    hi NonText guibg=NONE
     
     let base16colorspace=256
 ]])
@@ -14,8 +18,6 @@ vim.opt.termguicolors = true
 -- vim.opt.background = 'dark'
 -- vim.g['gruvbox_contrast_dark'] = 'hard'
 -- vim.cmd('colorscheme gruvbox')
-vim.g['gruvbox_material_background'] = 'hard'
-vim.cmd('colorscheme gruvbox-material')
 vim.opt.syntax = 'on'
 vim.opt.swapfile = false
 
