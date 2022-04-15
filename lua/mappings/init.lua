@@ -72,7 +72,7 @@ map('n', '<space>e', ':lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts
 
 -- Goto previous/next diagnostic warning/error
 -- map('n', 'g[', ':lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-map('n', 'g[', ':lua vim.lsp.diagnostic.get_prev()<CR>', opts)
+map('n', 'g[', ':lua vim.diagnostic.goto_prev()<CR>', opts)
 -- map('n', 'g]', ':lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-map('n', 'g]', ':lua vim.lsp.diagnostic.get_next()<CR>', opts)
+map('n', 'g]', ':lua vim.diagnostic.goto_next()<CR>', opts)
 
