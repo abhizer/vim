@@ -1,20 +1,72 @@
 -- Editor 
-vim.g['gruvbox_material_background'] = 'hard'
-vim.cmd('colorscheme gruvbox-material')
+-- vim.g['gruvbox_material_background'] = 'hard'
+-- vim.cmd('colorscheme gruvbox-material')
 
-vim.cmd([[
-    if !has("gui_running")
-        set t_Co=256
-    endif
+vim.g.catppuccin_flavour = "macchiato" -- latte, frappe, macchiato, mocha
 
-    let &t_ut=''
-    hi Normal guibg=NONE
-    hi NonText guibg=NONE
-    
-    let base16colorspace=256
-]])
+require("catppuccin").setup({
+    transparent_background = false,
+    term_colors = true,
+    compile = {
+        enabled = false,
+        path = vim.fn.stdpath("cache") .. "/catppuccin",
+    },
+    dim_inactive = {
+        enabled = true,
+        shade = "dark",
+        percentage = 0.15,
+    },
+    styles = {
+        comments = { "italic" },
+        conditionals = { "italic" },
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+    },
+    integrations = {
+        -- For various plugins integrations see https://github.com/catppuccin/nvim#integrations
+    },
+    color_overrides = {},
+    highlight_overrides = {},
+    native_lsp = {
+        enabled = true,
+        virtual_text = {
+            errors = { "italic" },
+            hints = { "italic" },
+            warnings = { "italic" },
+            information = { "italic" },
+        },
+        underlines = {
+            errors = { "underline" },
+            hints = { "underline" },
+            warnings = { "underline" },
+            information = { "underline" },
+        },
+    },
+})
 
-vim.opt.termguicolors = true
+vim.cmd [[colorscheme catppuccin]]
+
+-- vim.cmd([[
+--     if !has("gui_running")
+--         set t_Co=256
+--     endif
+
+--     let &t_ut=''
+--     hi Normal guibg=NONE
+--     hi NonText guibg=NONE
+
+--     let base16colorspace=256
+-- ]])
+
+-- vim.opt.termguicolors = true
 -- vim.opt.background = 'dark'
 -- vim.g['gruvbox_contrast_dark'] = 'hard'
 -- vim.cmd('colorscheme gruvbox')
@@ -27,6 +79,23 @@ vim.opt.modeline = false
 vim.opt.showmode = false
 
 vim.g.mapleader = ','
+
+-- " Disable highlight white space after "[]".
+vim.g.v_highlight_array_whitespace_error = 0
+
+-- " Disable highlight white space around the communications operator that don't follow the standard style.
+vim.g.v_highlight_chan_whitespace_error = 0
+
+-- " Disable highlight instances of tabs following spaces.
+vim.g.v_highlight_space_tab_error = 0
+
+-- " Disable highlight trailing white space.
+vim.g.v_highlight_trailing_whitespace_error = 0
+
+-- " Disable highlight function calls.
+vim.g.v_highlight_function_calls = 0
+
+vim.g.v_highlight_fields = 0
 
 vim.wo.number = true
 vim.wo.relativenumber = true
@@ -107,8 +176,8 @@ vim.cmd('let NERDTreeHijackNetrw = 0')
 -- Auto-Commands
 vim.cmd([[
     augroup autosourcing
-        autocmd! 
-        autocmd BufWritePost ~/.config/nvim/init.lua source %
+    autocmd! 
+    autocmd BufWritePost ~/.config/nvim/init.lua source %
     augroup END
 ]])
 

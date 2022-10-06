@@ -13,7 +13,8 @@ return require('packer').startup(function(use)
     -- Colorschemes
     -- use 'chriskempson/base16-vim'
     -- use 'morhetz/gruvbox'
-    use 'sainnhe/gruvbox-material'
+    -- use 'sainnhe/gruvbox-material'
+    use 'catppuccin/nvim'
 
     -- Vim Surround
     use 'tpope/vim-surround'
@@ -54,6 +55,9 @@ return require('packer').startup(function(use)
     -- Rust
     use 'rust-lang/rust.vim'
     use 'simrat39/rust-tools.nvim'
+
+    -- Vlang
+    use "ollykel/v-vim"
 
     -- TOML
     use 'cespare/vim-toml'
@@ -128,7 +132,8 @@ return require('packer').startup(function(use)
     }
 
     -- Bufferline
-    use 'akinsho/bufferline.nvim'
+    use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
+
 
     -- Emmet
     use 'mattn/emmet-vim'
