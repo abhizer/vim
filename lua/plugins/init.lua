@@ -1,7 +1,8 @@
 local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-    packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    packer_bootstrap = fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim',
+        install_path })
 end
 
 return require('packer').startup(function(use)
@@ -32,7 +33,7 @@ return require('packer').startup(function(use)
     use 'andymass/vim-matchup'
 
     -- Auto Pairs
-    use 'jiangmiao/auto-pairs'
+    -- use 'jiangmiao/auto-pairs'
 
     -- Change Directory to the Project Root
     use 'airblade/vim-rooter'
@@ -53,8 +54,8 @@ return require('packer').startup(function(use)
     use 'fatih/vim-go'
 
     -- Rust
-    use 'rust-lang/rust.vim'
-    use 'simrat39/rust-tools.nvim'
+    -- use 'rust-lang/rust.vim'
+    -- use 'simrat39/rust-tools.nvim'
 
     -- Vlang
     use "ollykel/v-vim"
@@ -72,14 +73,14 @@ return require('packer').startup(function(use)
     use 'nvim-lua/lsp_extensions.nvim'
 
     -- Autocompletion framework for built-in LSP
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-vsnip'
-    use 'hrsh7th/cmp-path'
-    use 'hrsh7th/cmp-buffer'
+    -- use 'hrsh7th/nvim-cmp'
+    -- use 'hrsh7th/cmp-nvim-lsp'
+    -- use 'hrsh7th/cmp-vsnip'
+    -- use 'hrsh7th/cmp-path'
+    -- use 'hrsh7th/cmp-buffer'
 
     -- Snippet Engine
-    use 'hrsh7th/vim-vsnip'
+    -- use 'hrsh7th/vim-vsnip'
 
     -- Optional dependencies
     use 'nvim-lua/popup.nvim'
@@ -90,14 +91,14 @@ return require('packer').startup(function(use)
     use {
         'lewis6991/gitsigns.nvim',
         config = function()
-            require('gitsigns').setup{
-                numhl = true, 
-                current_line_blame = true, 
+            require('gitsigns').setup {
+                numhl = true,
+                current_line_blame = true,
             }
         end
     }
 
-    -- Debugger 
+    -- Debugger
     use 'mfussenegger/nvim-dap'
 
     -- TreeSitter
@@ -115,15 +116,15 @@ return require('packer').startup(function(use)
     -- Fancy Start Page
     use {
         'goolord/alpha-nvim',
-        config = function ()
-            require'alpha'.setup(require'alpha.themes.startify'.opts)
+        config = function()
+            require 'alpha'.setup(require 'alpha.themes.startify'.opts)
         end
     }
 
     -- NvimTree
     use {
         'kyazdani42/nvim-tree.lua',
-        config = function() require'nvim-tree'.setup{} end
+        config = function() require 'nvim-tree'.setup {} end
     }
 
     -- Lualine
@@ -132,11 +133,70 @@ return require('packer').startup(function(use)
     }
 
     -- Bufferline
-    use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
+    use { 'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons' }
 
 
     -- Emmet
     use 'mattn/emmet-vim'
 
-end)
+    use {
+        'VonHeikemen/lsp-zero.nvim',
+        branch = 'v1.x',
+        requires = {
+            -- LSP Support
+            { 'neovim/nvim-lspconfig' },
+            { 'williamboman/mason.nvim' },
+            { 'williamboman/mason-lspconfig.nvim' },
 
+            -- Autocompletion
+            { 'hrsh7th/nvim-cmp' },
+            { 'hrsh7th/cmp-buffer' },
+            { 'hrsh7th/cmp-path' },
+            { 'saadparwaiz1/cmp_luasnip' },
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'hrsh7th/cmp-nvim-lua' },
+
+            -- Snippets
+            { 'L3MON4D3/LuaSnip' },
+            { 'rafamadriz/friendly-snippets' },
+        }
+    }
+
+    use {
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "InsertEnter",
+        config = function()
+            require("copilot").setup(
+            -- {
+            -- suggestion = { enabled = false },
+            -- panel = { enabled = false },
+            -- }
+            )
+        end,
+    }
+
+    use {
+        "zbirenbaum/copilot-cmp",
+        after = { "copilot.lua" },
+        config = function()
+            require("copilot_cmp").setup(
+                {
+                    method = "getCompletionsCycling",
+                }
+            )
+        end
+    }
+
+
+    --     use {
+    --         'Exafunction/codeium.vim',
+    --         config = function()
+    --           -- Change '<C-g>' here to any keycode you like.
+    --           vim.keymap.set('i', '<C-g>', function ()
+    --             return vim.fn['codeium#Accept']()
+    --           end, { expr = true })
+    --         end
+    --       }
+
+end)

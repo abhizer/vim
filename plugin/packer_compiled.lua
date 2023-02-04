@@ -74,16 +74,16 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  LuaSnip = {
+    loaded = true,
+    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/LuaSnip",
+    url = "https://github.com/L3MON4D3/LuaSnip"
+  },
   ["alpha-nvim"] = {
     config = { "\27LJ\2\n^\0\0\5\0\5\0\n6\0\0\0'\2\1\0B\0\2\0029\0\2\0006\2\0\0'\4\3\0B\2\2\0029\2\4\2B\0\2\1K\0\1\0\topts\26alpha.themes.startify\nsetup\nalpha\frequire\0" },
     loaded = true,
     path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/alpha-nvim",
     url = "https://github.com/goolord/alpha-nvim"
-  },
-  ["auto-pairs"] = {
-    loaded = true,
-    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/auto-pairs",
-    url = "https://github.com/jiangmiao/auto-pairs"
   },
   ["bufferline.nvim"] = {
     loaded = true,
@@ -100,26 +100,61 @@ _G.packer_plugins = {
     path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp",
     url = "https://github.com/hrsh7th/cmp-nvim-lsp"
   },
+  ["cmp-nvim-lua"] = {
+    loaded = true,
+    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/cmp-nvim-lua",
+    url = "https://github.com/hrsh7th/cmp-nvim-lua"
+  },
   ["cmp-path"] = {
     loaded = true,
     path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/cmp-path",
     url = "https://github.com/hrsh7th/cmp-path"
   },
-  ["cmp-vsnip"] = {
+  cmp_luasnip = {
     loaded = true,
-    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/cmp-vsnip",
-    url = "https://github.com/hrsh7th/cmp-vsnip"
+    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
+    url = "https://github.com/saadparwaiz1/cmp_luasnip"
+  },
+  ["copilot-cmp"] = {
+    config = { "\27LJ\2\n9\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\16copilot_cmp\frequire\0" },
+    load_after = {
+      ["copilot.lua"] = true
+    },
+    loaded = false,
+    needs_bufread = false,
+    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/opt/copilot-cmp",
+    url = "https://github.com/zbirenbaum/copilot-cmp"
+  },
+  ["copilot.lua"] = {
+    after = { "copilot-cmp" },
+    commands = { "Copilot" },
+    config = { "\27LJ\2\nu\0\0\4\0\b\0\v6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\4\0005\3\3\0=\3\5\0025\3\6\0=\3\a\2B\0\2\1K\0\1\0\npanel\1\0\1\fenabled\1\15suggestion\1\0\0\1\0\1\fenabled\1\nsetup\fcopilot\frequire\0" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/opt/copilot.lua",
+    url = "https://github.com/zbirenbaum/copilot.lua"
   },
   ["emmet-vim"] = {
     loaded = true,
     path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/emmet-vim",
     url = "https://github.com/mattn/emmet-vim"
   },
+  ["friendly-snippets"] = {
+    loaded = true,
+    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/friendly-snippets",
+    url = "https://github.com/rafamadriz/friendly-snippets"
+  },
   ["gitsigns.nvim"] = {
     config = { "\27LJ\2\nX\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\2\23current_line_blame\2\nnumhl\2\nsetup\rgitsigns\frequire\0" },
     loaded = true,
     path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
     url = "https://github.com/lewis6991/gitsigns.nvim"
+  },
+  ["lsp-zero.nvim"] = {
+    loaded = true,
+    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/lsp-zero.nvim",
+    url = "https://github.com/VonHeikemen/lsp-zero.nvim"
   },
   ["lsp_extensions.nvim"] = {
     loaded = true,
@@ -135,6 +170,16 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
+  },
+  ["mason-lspconfig.nvim"] = {
+    loaded = true,
+    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/mason-lspconfig.nvim",
+    url = "https://github.com/williamboman/mason-lspconfig.nvim"
+  },
+  ["mason.nvim"] = {
+    loaded = true,
+    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/mason.nvim",
+    url = "https://github.com/williamboman/mason.nvim"
   },
   ["nginx.vim"] = {
     loaded = true,
@@ -191,16 +236,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/popup.nvim",
     url = "https://github.com/nvim-lua/popup.nvim"
-  },
-  ["rust-tools.nvim"] = {
-    loaded = true,
-    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/rust-tools.nvim",
-    url = "https://github.com/simrat39/rust-tools.nvim"
-  },
-  ["rust.vim"] = {
-    loaded = true,
-    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/rust.vim",
-    url = "https://github.com/rust-lang/rust.vim"
   },
   tabular = {
     loaded = true,
@@ -276,27 +311,41 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/vim-vinegar",
     url = "https://github.com/tpope/vim-vinegar"
-  },
-  ["vim-vsnip"] = {
-    loaded = true,
-    path = "/Users/abhizer/.local/share/nvim/site/pack/packer/start/vim-vsnip",
-    url = "https://github.com/hrsh7th/vim-vsnip"
   }
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: gitsigns.nvim
-time([[Config for gitsigns.nvim]], true)
-try_loadstring("\27LJ\2\nX\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\2\23current_line_blame\2\nnumhl\2\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
-time([[Config for gitsigns.nvim]], false)
--- Config for: nvim-tree.lua
-time([[Config for nvim-tree.lua]], true)
-try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14nvim-tree\frequire\0", "config", "nvim-tree.lua")
-time([[Config for nvim-tree.lua]], false)
 -- Config for: alpha-nvim
 time([[Config for alpha-nvim]], true)
 try_loadstring("\27LJ\2\n^\0\0\5\0\5\0\n6\0\0\0'\2\1\0B\0\2\0029\0\2\0006\2\0\0'\4\3\0B\2\2\0029\2\4\2B\0\2\1K\0\1\0\topts\26alpha.themes.startify\nsetup\nalpha\frequire\0", "config", "alpha-nvim")
 time([[Config for alpha-nvim]], false)
+-- Config for: nvim-tree.lua
+time([[Config for nvim-tree.lua]], true)
+try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14nvim-tree\frequire\0", "config", "nvim-tree.lua")
+time([[Config for nvim-tree.lua]], false)
+-- Config for: gitsigns.nvim
+time([[Config for gitsigns.nvim]], true)
+try_loadstring("\27LJ\2\nX\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\2\23current_line_blame\2\nnumhl\2\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
+time([[Config for gitsigns.nvim]], false)
+
+-- Command lazy-loads
+time([[Defining lazy-load commands]], true)
+pcall(vim.api.nvim_create_user_command, 'Copilot', function(cmdargs)
+          require('packer.load')({'copilot.lua'}, { cmd = 'Copilot', l1 = cmdargs.line1, l2 = cmdargs.line2, bang = cmdargs.bang, args = cmdargs.args, mods = cmdargs.mods }, _G.packer_plugins)
+        end,
+        {nargs = '*', range = true, bang = true, complete = function()
+          require('packer.load')({'copilot.lua'}, {}, _G.packer_plugins)
+          return vim.fn.getcompletion('Copilot ', 'cmdline')
+      end})
+time([[Defining lazy-load commands]], false)
+
+vim.cmd [[augroup packer_load_aucmds]]
+vim.cmd [[au!]]
+  -- Event lazy-loads
+time([[Defining lazy-load event autocommands]], true)
+vim.cmd [[au InsertEnter * ++once lua require("packer.load")({'copilot.lua'}, { event = "InsertEnter *" }, _G.packer_plugins)]]
+time([[Defining lazy-load event autocommands]], false)
+vim.cmd("augroup END")
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then

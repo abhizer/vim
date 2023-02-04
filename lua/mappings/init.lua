@@ -30,6 +30,9 @@ map('n', 'N', 'Nzz', opts)
 map('n', '<left>', ':bp<cr>', opts)
 map('n', '<right>', ':bn<cr>', opts)
 
+-- Close buffer
+map('n', '<leader>d', ':bd<cr>', opts)
+
 -- Remove Search Highlight
 map('n', '<leader><space>', ':nohlsearch<cr>', opts)
 
@@ -67,7 +70,7 @@ map('n', '<space>D', ':lua vim.lsp.buf.type_definition()<CR>', opts)
 map('n', '<space>rn', ':lua vim.lsp.buf.rename()<CR>', opts)
 map('n', '<space>a', ':lua vim.lsp.buf.code_action()<CR>', opts)
 map('n', '<space>q', ':lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-map('n', '<space>f', ':lua vim.lsp.buf.formatting()<CR>', opts)
+map('n', '<space>f', ':lua vim.lsp.buf.format { async = true }<CR>', opts)
 map('n', '<space>e', ':lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts) 
 
 -- Goto previous/next diagnostic warning/error
