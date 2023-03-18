@@ -1,202 +1,156 @@
-local fn = vim.fn
-local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-    packer_bootstrap = fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim',
-        install_path })
+-- Install package manager
+local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system {
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable', -- latest stable release
+    lazypath,
+  }
 end
 
-return require('packer').startup(function(use)
-    use 'wbthomason/packer.nvim'
+vim.opt.rtp:prepend(lazypath)
 
-    -- Vinegar
-    use 'tpope/vim-vinegar'
+require('lazy').setup({
+  -- Git in github
+  'tpope/vim-fugitive',
+  -- hub in github
+  'tpope/vim-rhubarb',
+  'tpope/vim-vinegar',
+  'kyazdani42/nvim-web-devicons',
+  -- detect tabstop and shiftwidth automatically
+  'tpope/vim-sleuth',
+  -- NOTE: This is where your plugins related to LSP can be installed.
+  --  The configuration is done below. Search for lspconfig to find it below.
+  {
+    -- LSP Configuration & Plugins
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      -- Automatically install LSPs to stdpath for neovim
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
 
-    -- Colorschemes
-    -- use 'chriskempson/base16-vim'
-    -- use 'morhetz/gruvbox'
-    -- use 'sainnhe/gruvbox-material'
-    use 'catppuccin/nvim'
+      -- Useful status updates for LSP
+      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+      { 'j-hui/fidget.nvim', opts = {} },
 
-    -- Vim Surround
-    use 'tpope/vim-surround'
-
-    -- Tabular
-    use 'godlygeek/tabular'
-
-    -- Easy Comment Uncomment
-    use 'tpope/vim-commentary'
-
-    -- Git / Fugitive
-    use 'tpope/vim-fugitive'
-
-    -- Better Matching with %
-    use 'andymass/vim-matchup'
-
-    -- Auto Pairs
-    -- use 'jiangmiao/auto-pairs'
-
-    -- Change Directory to the Project Root
-    use 'airblade/vim-rooter'
-
-    -- Close Tags
-    use 'alvan/vim-closetag'
-
-    -- Sneak Search
-    use 'justinmk/vim-sneak'
-
-    -- Laravel Blade
-    use 'jwalton512/vim-blade'
-
-    -- Nginx
-    use 'chr4/nginx.vim'
-
-    -- GoLang
-    use 'fatih/vim-go'
-
-    -- Rust
-    -- use 'rust-lang/rust.vim'
-    -- use 'simrat39/rust-tools.nvim'
-
-    -- Vlang
-    use "ollykel/v-vim"
-
-    -- TOML
-    use 'cespare/vim-toml'
-
-    -- Terraform
-    use 'hashivim/vim-terraform'
-
-    -- Nvim-LSP
-    use 'neovim/nvim-lspconfig'
-
-    -- Extensions to built-in LSP, for example, providing type inlay hints
-    use 'nvim-lua/lsp_extensions.nvim'
-
-    -- Autocompletion framework for built-in LSP
-    -- use 'hrsh7th/nvim-cmp'
-    -- use 'hrsh7th/cmp-nvim-lsp'
-    -- use 'hrsh7th/cmp-vsnip'
-    -- use 'hrsh7th/cmp-path'
-    -- use 'hrsh7th/cmp-buffer'
-
-    -- Snippet Engine
-    -- use 'hrsh7th/vim-vsnip'
-
-    -- Optional dependencies
-    use 'nvim-lua/popup.nvim'
-    use 'nvim-lua/plenary.nvim'
-    use 'nvim-telescope/telescope.nvim'
-
-    -- Git Gutter
-    use {
-        'lewis6991/gitsigns.nvim',
-        config = function()
-            require('gitsigns').setup {
-                numhl = true,
-                current_line_blame = true,
-            }
-        end
+      -- Additional lua configuration, makes nvim stuff amazing!
+      'folke/neodev.nvim',
+    },
+  },
+  {
+    -- Autocompletion
+    'hrsh7th/nvim-cmp',
+    dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip', 'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer' },
+  },
+  -- Useful plugin to show you pending keybinds.
+  { 'folke/which-key.nvim',          opts = {} },
+  {
+    -- Adds git releated signs to the gutter, as well as utilities for managing changes
+    'lewis6991/gitsigns.nvim',
+    opts = {
+      numhl = true,
+      current_line_blame = true,
+      -- See `:help gitsigns.txt`
+      -- signs = {
+      --   add = { text = '+' },
+      --   change = { text = '~' },
+      --   delete = { text = '_' },
+      --   topdelete = { text = '‾' },
+      --   changedelete = { text = '~' },
+      -- },
+    },
+  },
+  {
+    'goolord/alpha-nvim',
+    config = function()
+      require 'alpha'.setup(require 'alpha.themes.startify'.opts)
+    end
+  },
+  {
+    'kyazdani42/nvim-tree.lua',
+    config = function() require 'nvim-tree'.setup {} end
+  },
+  {
+    -- theme
+    'catppuccin/nvim',
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'catppuccin-mocha'
+    end,
+  },
+  {
+    'nvim-lualine/lualine.nvim',
+    opts = {
+      options = {
+        icons_enabled = true,
+        theme = "catppuccin",
+        component_separators = "|",
+        section_separators = '',
+      }
     }
+  },
+  {
+    -- Add indentation guides even on blank lines
+    'lukas-reineke/indent-blankline.nvim',
+    -- Enable `lukas-reineke/indent-blankline.nvim`
+    -- See `:help indent_blankline.txt`
+    opts = {
+      char = '┊',
+      show_trailing_blankline_indent = false,
+    },
+  },
+  'nvim-lua/popup.nvim',
+  'notjedi/nvim-rooter.lua',
+  -- "gc" to comment visual regions/lines
+  { 'numToStr/Comment.nvim',         opts = {} },
+  -- Fuzzy Finder (files, lsp, etc)
+  { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
+  -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+  -- Only load if `make` is available. Make sure you have the system
+  -- requirements installed.
+  {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    -- NOTE: If you are having trouble with this installation,
+    --       refer to the README for telescope-fzf-native for more instructions.
+    build = 'make',
+    cond = function()
+      return vim.fn.executable 'make' == 1
+    end,
+  },
+  {
+    -- Highlight, edit, and navigate code
+    'nvim-treesitter/nvim-treesitter',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
+    config = function()
+      pcall(require('nvim-treesitter.install').update { with_sync = true })
+    end,
+  },
+  {
+    'akinsho/bufferline.nvim',
+    version = "v3.*",
+    dependencies = 'kyazdani42/nvim-web-devicons',
+    config = function() require("bufferline").setup {} end,
+  },
+  {
+    'onsails/lspkind-nvim',
+    config = function()
+      local lspkind = require("lspkind")
+      lspkind.init({})
+    end,
+  },
 
-    -- Debugger
-    use 'mfussenegger/nvim-dap'
+  {
+    "folke/todo-comments.nvim",
+    dependencies = "nvim-lua/plenary.nvim",
+    config = function()
+      require("todo-comments").setup {}
+    end
+  },
 
-    -- TreeSitter
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate'
-    }
-
-    -- Devicons
-    use 'kyazdani42/nvim-web-devicons'
-
-    -- Lspkind
-    use 'onsails/lspkind-nvim'
-
-    -- Fancy Start Page
-    use {
-        'goolord/alpha-nvim',
-        config = function()
-            require 'alpha'.setup(require 'alpha.themes.startify'.opts)
-        end
-    }
-
-    -- NvimTree
-    use {
-        'kyazdani42/nvim-tree.lua',
-        config = function() require 'nvim-tree'.setup {} end
-    }
-
-    -- Lualine
-    use {
-        'nvim-lualine/lualine.nvim',
-    }
-
-    -- Bufferline
-    use { 'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons' }
-
-
-    -- Emmet
-    use 'mattn/emmet-vim'
-
-    use {
-        'VonHeikemen/lsp-zero.nvim',
-        branch = 'v1.x',
-        requires = {
-            -- LSP Support
-            { 'neovim/nvim-lspconfig' },
-            { 'williamboman/mason.nvim' },
-            { 'williamboman/mason-lspconfig.nvim' },
-
-            -- Autocompletion
-            { 'hrsh7th/nvim-cmp' },
-            { 'hrsh7th/cmp-buffer' },
-            { 'hrsh7th/cmp-path' },
-            { 'saadparwaiz1/cmp_luasnip' },
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'hrsh7th/cmp-nvim-lua' },
-
-            -- Snippets
-            { 'L3MON4D3/LuaSnip' },
-            { 'rafamadriz/friendly-snippets' },
-        }
-    }
-
-    use {
-        "zbirenbaum/copilot.lua",
-        cmd = "Copilot",
-        event = "InsertEnter",
-        config = function()
-            require("copilot").setup(
-            -- {
-            -- suggestion = { enabled = false },
-            -- panel = { enabled = false },
-            -- }
-            )
-        end,
-    }
-
-    use {
-        "zbirenbaum/copilot-cmp",
-        after = { "copilot.lua" },
-        config = function()
-            require("copilot_cmp").setup(
-                {
-                    method = "getCompletionsCycling",
-                }
-            )
-        end
-    }
-
-
-    --     use {
-    --         'Exafunction/codeium.vim',
-    --         config = function()
-    --           -- Change '<C-g>' here to any keycode you like.
-    --           vim.keymap.set('i', '<C-g>', function ()
-    --             return vim.fn['codeium#Accept']()
-    --           end, { expr = true })
-    --         end
-    --       }
-
-end)
+}, {})

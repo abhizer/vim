@@ -1,6 +1,4 @@
 require('plugins/init')
-require('plugins/lualine')
-require('plugins/bufferline')
 require('editor/init')
-require('lsp/init')
-require('mappings/init')
+require("lsp/init")
+require("mappings/init")
