@@ -59,8 +59,10 @@ local servers = {
 	-- gopls = {},
 	-- pyright = {},
 	rust_analyzer = {
-		checkOnSave = {
-			command = 'clippy',
+		["rust-analyzer"] = {
+			checkOnSave = {
+				command = 'clippy',
+			}
 		}
 	},
 	-- tsserver = {},
