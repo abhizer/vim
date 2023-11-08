@@ -14,6 +14,21 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
+  -- theme
+  {
+    'aktersnurra/no-clown-fiesta.nvim',
+    config = function()
+      require('no-clown-fiesta').setup({
+        transparent = true,
+        styles = {
+          comments = { italic = true },
+          type = { fg = "#9c8e72" , bold = true },
+          lsp = { underline = true }
+        }
+      })
+      vim.cmd.colorscheme 'no-clown-fiesta'
+    end
+  },
   -- Git in github
   'tpope/vim-fugitive',
   -- hub in github
@@ -33,8 +48,7 @@ require('lazy').setup({
       'williamboman/mason-lspconfig.nvim',
 
       -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim', tag = "legacy", opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -79,7 +93,7 @@ require('lazy').setup({
     'catppuccin/nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'catppuccin-mocha'
+      -- vim.cmd.colorscheme 'catppuccin-mocha'
     end,
   },
   {
@@ -87,7 +101,8 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = true,
-        theme = "catppuccin",
+        -- theme = "catppuccin",
+        theme = "no-clown-fiesta",
         component_separators = "|",
         section_separators = '',
       }
@@ -133,7 +148,7 @@ require('lazy').setup({
   },
   {
     'akinsho/bufferline.nvim',
-    version = "v3.*",
+    version = "*",
     dependencies = 'kyazdani42/nvim-web-devicons',
     config = function() require("bufferline").setup {} end,
   },
