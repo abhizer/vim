@@ -15,20 +15,20 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   -- theme
-  {
-    'aktersnurra/no-clown-fiesta.nvim',
-    config = function()
-      require('no-clown-fiesta').setup({
-        transparent = true,
-        styles = {
-          comments = { italic = true },
-          type = { fg = "#9c8e72", bold = true },
-          lsp = { underline = true }
-        }
-      })
-      vim.cmd.colorscheme 'no-clown-fiesta'
-    end
-  },
+  -- {
+  --   'aktersnurra/no-clown-fiesta.nvim',
+  --   config = function()
+  --     require('no-clown-fiesta').setup({
+  --       transparent = true,
+  --       styles = {
+  --         comments = { italic = true },
+  --         type = { fg = "#9c8e72", bold = true },
+  --         lsp = { underline = true }
+  --       }
+  --     })
+  --     vim.cmd.colorscheme 'no-clown-fiesta'
+  --   end
+  -- },
   -- Git in github
   'tpope/vim-fugitive',
   -- hub in github
@@ -89,11 +89,18 @@ require('lazy').setup({
     config = function() require 'nvim-tree'.setup {} end
   },
   {
+    'navarasu/onedark.nvim',
+    config = function()
+      vim.cmd.colorscheme 'onedark'
+    end,
+  },
+  {
     -- theme
     'catppuccin/nvim',
     priority = 1000,
     config = function()
-      -- vim.cmd.colorscheme 'catppuccin-mocha'
+      -- vim.cmd.colorscheme 'catppuccin-frappe'
+      -- vim.cmd.colorscheme 'catppuccin-latte'
     end,
   },
   {
@@ -102,7 +109,8 @@ require('lazy').setup({
       options = {
         icons_enabled = true,
         -- theme = "catppuccin",
-        theme = "no-clown-fiesta",
+        -- theme = "no-clown-fiesta",
+        theme = "onedark",
         component_separators = "|",
         section_separators = '',
       }
