@@ -4,14 +4,16 @@ vim.keymap.set('n', 'g]', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
   local nmap = function(keys, func, desc)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
   end
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-  nmap('<space>f', function() vim.lsp.buf.format { async = true } end, '[F]ormat buffer')
+  nmap('<space>f', function()
+    require('conform').format { async = true, lsp_format = 'fallback' }
+  end, '[F]ormat buffer')
 
   nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -22,7 +24,8 @@ local on_attach = function(_, bufnr)
 
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+  -- gD is bound to lspeek's peek_definition (see lua/plugins/init.lua).
+  nmap('<leader>gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
   nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
   nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
@@ -31,8 +34,18 @@ local on_attach = function(_, bufnr)
   end, '[W]orkspace [L]ist Folders')
 
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format { async = true }
-  end, { desc = 'Format current buffer with LSP' })
+    require('conform').format { async = true, lsp_format = 'fallback' }
+  end, { desc = 'Format current buffer' })
+
+  -- Inlay hints (Neovim 0.11+): inferred types / param names shown inline.
+  -- Enabled by default where supported, toggle with <leader>th.
+  if client and client:supports_method('textDocument/inlayHint') then
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    nmap('<leader>th', function()
+      local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+      vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+    end, '[T]oggle inlay [H]ints')
+  end
 end
 
 local servers = {
@@ -57,10 +70,21 @@ require('neodev').setup()
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+-- Run on_attach via LspAttach autocommand. Passing on_attach through
+-- vim.lsp.config('*') is not reliably invoked with mason-lspconfig's
+-- automatic_enable path on 0.11+/0.12, which left the buffer-local keymaps
+-- (gd, gr, K, ...) unset and made gd fall back to Neovim's built-in.
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspAttach', { clear = true }),
+  callback = function(event)
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    on_attach(client, event.buf)
+  end,
+})
+
 -- Apply global defaults to all servers (mason-lspconfig v2 / Neovim 0.11+ API)
 vim.lsp.config('*', {
   capabilities = capabilities,
-  on_attach = on_attach,
 })
 
 -- Apply per-server settings

@@ -63,6 +63,56 @@ require('lazy').setup({
     },
   },
 
+  -- Peek LSP definitions in a floating window. gD overrides
+  -- vim.lsp.buf.declaration (set in lua/lsp/init.lua) on purpose — both jump
+  -- to definitions, and the float is nicer for a quick look.
+  {
+    'r4ppz/lspeek.nvim',
+    -- close = '<Esc>' also handles Ctrl+[ — they are the same byte in a terminal.
+    opts = { keymaps = { close = '<Esc>' } },
+    keys = {
+      -- The flag lets the WinEnter autocmd below recognise the float that lspeek
+      -- is about to open (async, after the LSP reply) and add ',d' as a second
+      -- close key — lspeek itself only supports one.
+      { 'gD', function() vim.g._lspeek_opening = true; require('lspeek').peek_definition() end, desc = 'Peek Definition' },
+      { 'gT', function() vim.g._lspeek_opening = true; require('lspeek').peek_type_definition() end, desc = 'Peek Type Definition' },
+    },
+    config = function(_, opts)
+      require('lspeek').setup(opts)
+      vim.api.nvim_create_autocmd('WinEnter', {
+        group = vim.api.nvim_create_augroup('LspeekExtraClose', { clear = true }),
+        callback = function(ev)
+          if not vim.g._lspeek_opening then return end
+          local win = vim.api.nvim_get_current_win()
+          if vim.api.nvim_win_get_config(win).relative == '' then return end -- wait for the float
+          vim.g._lspeek_opening = false
+          vim.keymap.set('n', ',d', function() pcall(vim.api.nvim_win_close, win, true) end,
+            { buffer = ev.buf, nowait = true, silent = true, desc = 'Close lspeek preview' })
+          vim.api.nvim_create_autocmd('WinClosed', {
+            pattern = tostring(win),
+            once = true,
+            callback = function() pcall(vim.keymap.del, 'n', ',d', { buffer = ev.buf }) end,
+          })
+        end,
+      })
+    end,
+  },
+
+  -- Format on save. Lua uses stylua; Rust and everything else fall back to
+  -- the LSP formatter (rust_analyzer's rustfmt respects edition/rustfmt.toml).
+  {
+    'stevearc/conform.nvim',
+    event = { 'BufWritePre' },
+    cmd = { 'ConformInfo' },
+    opts = {
+      formatters_by_ft = {
+        lua = { 'stylua' },
+      },
+      default_format_opts = { lsp_format = 'fallback' },
+      format_on_save = { timeout_ms = 500, lsp_format = 'fallback' },
+    },
+  },
+
   -- Autocompletion
   {
     'hrsh7th/nvim-cmp',
@@ -74,6 +124,21 @@ require('lazy').setup({
     },
   },
 
+  -- Auto-close brackets/quotes, integrated with nvim-cmp.
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = function()
+      require('nvim-autopairs').setup({})
+      -- Add (…) after completing a function/method from nvim-cmp.
+      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+      require('cmp').event:on('confirm_done', cmp_autopairs.on_confirm_done())
+    end,
+  },
+
+  -- tpope-style surround: cs"' , ds( , ysiw]
+  { 'kylechui/nvim-surround', version = '*', event = 'VeryLazy', opts = {} },
+
   -- UI
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -81,6 +146,18 @@ require('lazy').setup({
     opts = {
       numhl = true,
       current_line_blame = true,
+      on_attach = function(bufnr)
+        local gs = require('gitsigns')
+        local function map(l, r, desc)
+          vim.keymap.set('n', l, r, { buffer = bufnr, desc = desc })
+        end
+        map(']c', function() gs.nav_hunk('next') end, 'Next git hunk')
+        map('[c', function() gs.nav_hunk('prev') end, 'Prev git hunk')
+        map('<leader>hs', gs.stage_hunk, 'Stage hunk')
+        map('<leader>hr', gs.reset_hunk, 'Reset hunk')
+        map('<leader>hp', gs.preview_hunk, 'Preview hunk')
+        map('<leader>hb', function() gs.blame_line({ full = true }) end, 'Blame line')
+      end,
     },
   },
   {
@@ -131,13 +208,92 @@ require('lazy').setup({
     cond = function() return vim.fn.executable 'make' == 1 end,
   },
 
-  -- Treesitter
+  -- Treesitter (main branch — required for Neovim 0.12; the classic master
+  -- branch does not support 0.12 and crashes the highlighter).
+  -- NOTE: the main branch compiles parsers with the tree-sitter CLI (>=0.26.1),
+  -- which must be on PATH (install it via your Nix config). Without it you
+  -- still get Vim's regex syntax highlighting, just not treesitter.
   {
     'nvim-treesitter/nvim-treesitter',
-    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+    branch = 'main',
+    lazy = false,
+    build = ':TSUpdate',
     config = function()
-      pcall(require('nvim-treesitter.install').update { with_sync = true })
+      require('nvim-treesitter').install({
+        'bash', 'c', 'cpp', 'go', 'lua', 'markdown', 'markdown_inline',
+        'python', 'query', 'rust', 'toml', 'tsx', 'typescript', 'vim', 'vimdoc',
+      })
+
+      -- Enable treesitter highlighting, folding and (experimental) indentation
+      -- for any buffer whose language has an installed parser.
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('ts_enable', { clear = true }),
+        callback = function(args)
+          local ft = vim.bo[args.buf].filetype
+          local lang = vim.treesitter.language.get_lang(ft) or ft
+          -- Only enable treesitter when a parser AND highlight query are
+          -- installed; otherwise leave Vim's regex syntax highlighting on.
+          -- (On the main branch, parsers/queries need the tree-sitter CLI.)
+          if not vim.treesitter.query.get(lang, 'highlights') then return end
+          if not pcall(vim.treesitter.start, args.buf, lang) then
+            return
+          end
+          vim.wo[0][0].foldmethod = 'expr'
+          vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+          if ft ~= 'python' then
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
+      })
     end,
+  },
+  -- Textobjects (main branch, matches nvim-treesitter main).
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    branch = 'main',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('nvim-treesitter-textobjects').setup({
+        select = { lookahead = true },
+        move = { set_jumps = true },
+      })
+
+      local select = require('nvim-treesitter-textobjects.select').select_textobject
+      local move = require('nvim-treesitter-textobjects.move')
+
+      -- Select (visual / operator-pending)
+      local sel = {
+        aa = '@parameter.outer', ia = '@parameter.inner',
+        af = '@function.outer', ['if'] = '@function.inner',
+        ac = '@class.outer', ic = '@class.inner',
+      }
+      for lhs, obj in pairs(sel) do
+        vim.keymap.set({ 'x', 'o' }, lhs, function() select(obj, 'textobjects') end,
+          { desc = 'TS select ' .. obj })
+      end
+
+      -- Move between functions/classes
+      local moves = {
+        { ']m', move.goto_next_start, '@function.outer' },
+        { ']]', move.goto_next_start, '@class.outer' },
+        { ']M', move.goto_next_end, '@function.outer' },
+        { '][', move.goto_next_end, '@class.outer' },
+        { '[m', move.goto_previous_start, '@function.outer' },
+        { '[[', move.goto_previous_start, '@class.outer' },
+        { '[M', move.goto_previous_end, '@function.outer' },
+        { '[]', move.goto_previous_end, '@class.outer' },
+      }
+      for _, m in ipairs(moves) do
+        vim.keymap.set({ 'n', 'x', 'o' }, m[1], function() m[2](m[3], 'textobjects') end,
+          { desc = 'TS move ' .. m[3] })
+      end
+    end,
+  },
+  -- Sticky header showing the enclosing fn/impl/scope at the top of the window.
+  {
+    'nvim-treesitter/nvim-treesitter-context',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = { max_lines = 3 },
   },
 
   -- Utilities
@@ -148,6 +304,15 @@ require('lazy').setup({
     'folke/todo-comments.nvim',
     dependencies = 'nvim-lua/plenary.nvim',
     opts = {},
+  },
+
+  -- Render LaTeX math as ASCII art (popup or inline virtual text).
+  {
+    'jbyuki/nabla.nvim',
+    keys = {
+      { '<leader>p', function() require('nabla').popup({ border = 'rounded' }) end, desc = 'Nabla: popup math' },
+      { '<leader>tp', function() require('nabla').toggle_virt() end, desc = 'Nabla: toggle inline math' },
+    },
   },
 
   -- AI CLI agents (Claude + Codex) in identical floating terminals.

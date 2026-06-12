@@ -30,7 +30,9 @@ vim.g['completion_matching_strategy_list'] = { 'exact', 'substring', 'fuzzy' }
 
 vim.cmd('set shortmess+=c')
 vim.opt.hidden = true
-vim.opt.lazyredraw = true
+-- NOTE: lazyredraw is intentionally NOT set. On modern Neovim it suppresses
+-- redraws during autocmds, which makes redraw-on-CursorMoved plugins (e.g.
+-- treesitter-context) leave the screen frozen/unhighlighted until a keypress.
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.autowrite = true
@@ -38,9 +40,8 @@ vim.opt.autowrite = true
 vim.o.termguicolors = true
 vim.o.scrolloff = 7
 
-vim.o.foldmethod = 'expr'
-vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
-
+-- Treesitter folding is configured per-buffer in the nvim-treesitter (main)
+-- FileType autocmd; open all folds when a file is read.
 vim.cmd('autocmd BufReadPost,FileReadPost * normal zR')
 
 -- Keymaps
@@ -59,6 +60,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- Telescope
 require('telescope').setup {
   defaults = {
+    -- Telescope 0.1.4 uses nvim-treesitter's old configs/parsers API for
+    -- preview buffers, which is not available on nvim-treesitter main.
+    preview = {
+      treesitter = false,
+    },
     mappings = {
       i = {
         ['<C-u>'] = false,
@@ -85,41 +91,8 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
--- Treesitter
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vim' },
-  auto_install = false,
-  highlight = { enable = true },
-  indent = { enable = true, disable = { 'python' } },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = '<c-space>',
-      node_incremental = '<c-space>',
-      scope_incremental = '<c-s>',
-      node_decremental = '<M-space>',
-    },
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ['aa'] = '@parameter.outer',
-        ['ia'] = '@parameter.inner',
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
-      },
-    },
-    move = {
-      enable = true,
-      set_jumps = true,
-      goto_next_start = { [']m'] = '@function.outer', [']]'] = '@class.outer' },
-      goto_next_end = { [']M'] = '@function.outer', [']['] = '@class.outer' },
-      goto_previous_start = { ['[m'] = '@function.outer', ['[['] = '@class.outer' },
-      goto_previous_end = { ['[M'] = '@function.outer', ['[]'] = '@class.outer' },
-    },
-  },
-}
+-- Treesitter is configured on the nvim-treesitter `main` branch in
+-- lua/plugins/init.lua (highlight/fold/indent autocmd + textobjects keymaps).
+-- The old `require('nvim-treesitter.configs').setup{}` API does not exist on
+-- the main branch. Note: incremental selection (<c-space>) was dropped — the
+-- main branch has no module for it.
